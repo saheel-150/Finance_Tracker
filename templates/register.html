@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<h2>Register</h2>
+<form method="POST" class="mb-3">
+    <div class="mb-3">
+        <label>Username:</label>
+        <input type="text" name="username" class="form-control" required>
+    </div>
+    <div class="mb-3">
+        <label>Password:</label>
+        <input type="password" name="password" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Register</button>
+</form>
+{% if error %}<div class="text-danger">{{ error }}</div>{% endif %}
+{% endblock %}

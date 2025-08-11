@@ -1,0 +1,85 @@
+{% extends "layout.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h2 class="mb-3">Welcome, {{ username }}!</h2>
+<a href="{{ url_for('logout') }}" class="btn btn-danger mb-4">Logout</a>
+
+<!-- Summary Section -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card p-3 text-bg-light">
+            <h5>Total Income: ₹{{ income }}</h5>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card p-3 text-bg-light">
+            <h5>Total Expense: ₹{{ expense }}</h5>
+        </div>
+    </div>
+</div>
+
+{% if income > 0 or expense > 0 %}
+<div class="mb-4">
+    <h5>Income vs Expense</h5>
+    <img src="{{ url_for('static', filename='chart.png') }}" class="img-fluid" style="max-width:300px;">
+</div>
+{% endif %}
+
+<!-- Filter Form -->
+<h5>🔍 Filter Transactions</h5>
+<form method="GET" class="row g-3 mb-4">
+    <div class="col-md-3">
+        <input type="date" name="start_date" class="form-control" placeholder="From Date">
+    </div>
+    <div class="col-md-3">
+        <input type="date" name="end_date" class="form-control" placeholder="To Date">
+    </div>
+    <div class="col-md-3">
+        <select name="type" class="form-select">
+            <option value="">All Types</option>
+            <option value="income">Income</option>
+            <option value="expense">Expense</option>
+        </select>
+    </div>
+    <div class="col-md-3">
+        <button type="submit" class="btn btn-outline-primary w-100">Apply Filters</button>
+    </div>
+</form>
+
+<!-- Add Transaction -->
+<h5>Add Transaction</h5>
+<form method="POST" class="card p-3 mb-4">
+    <div class="row g-3">
+        <div class="col-md-3">
+            <input type="number" name="amount" class="form-control" placeholder="Amount" required>
+        </div>
+        <div class="col-md-3">
+            <select name="category" class="form-select" required>
+                {% for category in categories %}
+                <option value="{{ category[0] }}">{{ category[1] }} ({{ category[2] }})</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <input type="date" name="date" class="form-control" required>
+        </div>
+        <div class="col-md-3">
+            <input type="text" name="note" class="form-control" placeholder="Note (optional)">
+        </div>
+    </div>
+    <div class="mt-3">
+        <button type="submit" class="btn btn-success">Add</button>
+    </div>
+</form>
+
+<!-- Transactions List -->
+<h5>Your Transactions</h5>
+<ul class="list-group">
+    {% for tx in transactions %}
+    <li class="list-group-item">
+        {{ tx[3] }} | ₹{{ tx[0] }} | {{ tx[1] }} ({{ tx[2] }}) | Note: {{ tx[4] or '—' }}
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}
